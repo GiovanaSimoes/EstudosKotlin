@@ -14,15 +14,16 @@ Passos:
 
 fun main(){
     val text = "a.b.c.d.a.b.c.c.d.D / 12333"
-    
-    val text1 = "aabbdddeeeef"
+
     println(countChar(text))
 }
 
-fun countChar(word: String): Map <Char, Int>{
+fun countChar(word: String): String{
 
-    val alfaWord = word.lowercase().filter { it.isLetterOrDigit()}.groupingBy { it }.eachCount().filter{it.value>1}
-    return alfaWord
-
+    word.lowercase()
+                        .filter { it.isLetterOrDigit()}
+                        .groupingBy { it }
+                        .eachCount()
+                        .filter{it.value>1}
+    return word
 }
-

@@ -13,55 +13,77 @@ Passos:
 -Separar valor digitado em 100,50,5,10,1
 -Informar quantidade de notas
  */
-import java.util.Scanner
 fun main(){
-    val reader = Scanner(System.`in`)
-
-    println("Qual valor você gostaria de sacar?")
-    var value = reader.nextInt()
-    withdrawalConditions(value)
-
-
+    val value = withdrawalConditions()
+    cashMachine(value)
 }
-//Caixa Eletrônico
-fun cashMachine(value : Int){
-    var value1 = value
-    var oneHundred = (value1/100)
-    value1 = value1-(oneHundred*100)
-
-    var fifty = (value1/50)
-    value1 = value1-(fifty*50)
-
-    var ten = (value1/10)
-    value1 = value1-(ten*10)
-
-    var five = (value1/5)
-    value1 = value1-(five*5)
-
-    var one = value1
+fun cashMachine(amount: Int){
+    val remainingOneHundred = getRemainingAmount(amount,Notes.ONEHUNDRED.weight)
+    val remainingFifty = getRemainingAmount(remainingOneHundred.getValue("value"), Notes.FIFTY.weight)
+    val remainingTen  = getRemainingAmount(remainingFifty.getValue("value"), Notes.TEN.weight)
+    val remainingFive = getRemainingAmount(remainingTen.getValue("value"), Notes.FIVE.weight)
+    val remainingOne = getRemainingAmount(remainingFive.getValue("value"), Notes.ONE.weight)
 
     println("Você irá precisar de: \n" +
-            "$oneHundred notas de R$100\n" +
-            "$fifty notas de R$50\n" +
-            "$ten notas de R$10\n" +
-            "$five notas de R$5\n" +
-            "$one notas de R$1\n")
+            "${remainingOneHundred.getValue("notes")} notas de R$100\n" +
+            "${remainingFifty.getValue("notes")} notas de R$50\n" +
+            "${remainingTen.getValue("notes")} notas de R$10\n" +
+            "${remainingFive.getValue("notes")} notas de R$5\n" +
+            "${remainingOne.getValue("notes")} notas de R$1\n")
 }
-//Condições de saque
-fun withdrawalConditions(value:Int){
-    val reader = Scanner(System.`in`)
 
-    if(value<10){
-        println("O valor mínimo para saque é 10 reais, digite outro valor:")
-        var value = reader.nextInt()
-        if(value>600){
-            println("O valor máximo para saque é 600 reais, digite outro valor:")
-            var value = reader.nextInt()
-    }
-    }else if(value.equals(String)){
-        println("Valor inválido, por favor utilize apenas números")
-        var value = reader.nextInt()
-    }else{
-        cashMachine(value)
-    }
+fun withdrawalConditions(): Int{
+    var canWithdraw : Boolean
+    var value  = 0
+
+    do {
+        println("Qual valor você gostaria de sacar?")
+
+        try {
+            value = getUseInput()
+        }catch (e : NumberFormatException){
+            println("Valor inválido, por favor utilize apenas números")
+            canWithdraw = false
+            continue
+        }
+        canWithdraw = checkTheValues(value)
+
+    } while(!canWithdraw)
+    return value
 }
+
+fun checkTheValues(value : Int) : Boolean {
+    when (value) {
+        in 0..10 -> {
+            println("O valor mínimo para saque é 10 reais, digite outro valor:")
+            return false
+        }
+
+        in 600..Int.MAX_VALUE -> {
+            println("O valor máximo para saque é 600 reais, digite outro valor:")
+            return false
+        }
+    }
+    return true
+}
+
+fun getRemainingAmount(amount: Int, noteValue: Int) : Map<String, Int>{
+    val qtdNotes = (amount/noteValue)
+    val quantity = amount - (qtdNotes * noteValue)
+    return mapOf("notes" to qtdNotes,"value" to quantity)
+}
+
+fun getUseInput(): Int {
+    val input = readLine()?:""
+    return input.toInt()
+}
+
+enum class Notes(var weight : Int){
+    ONE (1),
+    FIVE (5),
+    TEN (10),
+    FIFTY (50),
+    ONEHUNDRED (100)
+}
+
+

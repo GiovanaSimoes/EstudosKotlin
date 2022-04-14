@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     kotlin("jvm") version "1.6.10"
     application
+    id("io.gitlab.arturbosch.detekt").version("1.20.0-RC2")
 }
 
 group = "me.user"

@@ -2,29 +2,23 @@
 -Criar função que recebe uma lista de inteiros e retorna a soma dos conteúdos da lista
  */
 
-fun main(args: Array<String>) {
-    println("=====ForEach=====")
-    println(sumForEach())
+fun main() {
+    val list = arrayListOf(4,6,8,10,14)
 
-    println("\n=====Filter=====")
-    println(sumReduce())
-
+    println("ForEach\n ${sumForEach(list)}")
+    println("\nFilter ${sumReduce(list)}")
 }
 
-fun sumForEach (){
-    var list = arrayListOf(4,6,8,10,14)
+fun sumForEach (list : ArrayList<Int>){
     var sum = 0
 
-    for(items in list){
-        println(items)
-        sum = items + sum
+    list.forEach {
+        println(it)
+        sum += it
     }
     println("A soma dessa lista é: $sum")
 }
 
-fun sumReduce(){
-    var list = arrayListOf(4,6,8,10,14)
-    var result = list.reduce { sum, number -> sum + number }
-
-    println("A soma dessa lista é: $result")
+fun sumReduce(list : ArrayList<Int>){
+    println("A soma dessa lista é: ${list.reduce { sum, number -> sum + number }}")
 }
