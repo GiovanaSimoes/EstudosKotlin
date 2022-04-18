@@ -1,12 +1,10 @@
-/*
+/*Exercício 7:
 Um anagrama é um rearranjo de letras de uma palavra que formam uma nova palavra.
 Dado uma palavra e uma lista de palavras candidatas a anagramas, retornar a sublista dos anagramas da palavra.
 Não deve diferenciar letras maiúsculas e minúsculas.
  */
-
-
 fun main() {
-    println("Hello World!")
+
 }
 
 
