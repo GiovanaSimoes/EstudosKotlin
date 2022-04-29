@@ -7,7 +7,7 @@
 fun main(){
     val text = "Essa é a senha: 'Senha 123'!, falou o agente especial.\n A senha era muito fraca."
 
-    countWords(text)
+    filter(text)
 }
 
 fun countByWord(list: List<String>) {
@@ -22,7 +22,7 @@ fun countByWord(list: List<String>) {
     println(frequencyMap)
 }
 
-fun countWords(text: String) = text
+fun filter(text: String) = text
         .lowercase()
         .filter { it.isLetterOrDigit() || it == ' ' }
         .split(" ", "    ", "\n")
