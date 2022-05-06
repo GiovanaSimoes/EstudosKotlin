@@ -1,12 +1,16 @@
 package bank
 
-class BankAccount (owner: Client, openingBalance: Double){
-    companion object{
+class BankAccount(owner: Client, openingBalance: Double) {
+    companion object {
         var accountInitialId: Int = 1
     }
-    private var accountId: Int = 0
-    private var owner: Client
-    private var balance: Double = 0.0
+
+    var accountId: Int = 0
+        private set
+    var owner: Client
+        private set
+    var balance: Double = 0.0
+        private set
 
     init {
         this.accountId = accountInitialId++
@@ -14,61 +18,42 @@ class BankAccount (owner: Client, openingBalance: Double){
         this.balance = openingBalance
     }
 
-    fun withdraw(withdrawalValue: Double){
-        if(this.balance>=withdrawalValue){
-            this.balance-= withdrawalValue
-            println("Saque de R$$withdrawalValue efetuado com sucesso!!\nSeu saldo atual é: R$${this.balance}\n")
-            cashMachine(withdrawalValue.toInt())
-        }else{
-            println("Saldo Insuficiente, operação não efetuada!")
+    fun withdraw(withdrawalValue: Double): Boolean {
+        if (this.balance >= withdrawalValue) {
+            this.balance -= withdrawalValue
+        } else {
+            return false
         }
-
-    }
-    private fun cashMachine(amount: Int){
-        val remainingOneHundred = getRemainingAmount(amount,Notes.ONEHUNDRED.weight)
-        val remainingFifty = getRemainingAmount(remainingOneHundred.getValue("value"), Notes.FIFTY.weight)
-        val remainingTen  = getRemainingAmount(remainingFifty.getValue("value"), Notes.TEN.weight)
-        val remainingFive = getRemainingAmount(remainingTen.getValue("value"), Notes.FIVE.weight)
-        val remainingOne = getRemainingAmount(remainingFive.getValue("value"), Notes.ONE.weight)
-
-        println("Você irá receber: \n" +
-                "${remainingOneHundred.getValue("notes")} notas de R$100\n" +
-                "${remainingFifty.getValue("notes")} notas de R$50\n" +
-                "${remainingTen.getValue("notes")} notas de R$10\n" +
-                "${remainingFive.getValue("notes")} notas de R$5\n" +
-                "${remainingOne.getValue("notes")} notas de R$1\n")
+        return true
     }
 
-    private fun getRemainingAmount(amount: Int, noteValue: Int) : Map<String, Int>{
-        val qtdNotes = (amount/noteValue)
-        val quantity = amount - (qtdNotes * noteValue)
-        return mapOf("notes" to qtdNotes,"value" to quantity)
-    }
-
-    enum class Notes(var weight : Int){
-        ONE (1),
-        FIVE (5),
-        TEN (10),
-        FIFTY (50),
-        ONEHUNDRED (100)
-    }
-
-    fun deposit(depositAmount: Double){
+    fun deposit(depositAmount: Double): Boolean {
         this.balance += depositAmount
-        println("Deposito de R$$depositAmount concluído com sucesso!!\nSeu saldo atual é: R$${this.balance}")
+        return true
     }
 
-    fun transfer(destiny: BankAccount, transferValue: Double){
-        if(this.balance >= transferValue){
-            destiny.balance += transferValue
-            this.balance -= transferValue
-            println("Tranferência de R$$transferValue concluída com sucesso!!\nSeu saldo atual é: R\$${this.balance}")
-        }else{
-            println("Saldo Insuficiente, operação não efetuada!")
+    fun transfer(destiny: BankAccount, transferValue: Double): Boolean {
+        if (this.balance >= transferValue) {
+            destiny.deposit(transferValue)
+            this.withdraw(transferValue)
+        } else {
+            return false
         }
+        return true
     }
 
     override fun toString(): String {
-        return "BankAccount(accountId = $accountId, balance = R$$balance)"
+        return "BankAccount(accountId = $accountId, name = ${owner.name} balance = R$$balance)"
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as BankAccount
+
+        if (accountId != other.accountId) return false
+
+        return true
     }
 }
