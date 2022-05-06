@@ -13,46 +13,49 @@ Passos:
 -Separar valor digitado em 100,50,5,10,1
 -Informar quantidade de notas
  */
-fun main(){
+fun main() {
     val value = withdrawalConditions()
     cashMachine(value)
 }
-fun cashMachine(amount: Int){
-    val remainingOneHundred = getRemainingAmount(amount,Notes.ONEHUNDRED.weight)
+
+fun cashMachine(amount: Int) {
+    val remainingOneHundred = getRemainingAmount(amount, Notes.ONEHUNDRED.weight)
     val remainingFifty = getRemainingAmount(remainingOneHundred.getValue("value"), Notes.FIFTY.weight)
-    val remainingTen  = getRemainingAmount(remainingFifty.getValue("value"), Notes.TEN.weight)
+    val remainingTen = getRemainingAmount(remainingFifty.getValue("value"), Notes.TEN.weight)
     val remainingFive = getRemainingAmount(remainingTen.getValue("value"), Notes.FIVE.weight)
     val remainingOne = getRemainingAmount(remainingFive.getValue("value"), Notes.ONE.weight)
 
-    println("Você irá precisar de: \n" +
-            "${remainingOneHundred.getValue("notes")} notas de R$100\n" +
-            "${remainingFifty.getValue("notes")} notas de R$50\n" +
-            "${remainingTen.getValue("notes")} notas de R$10\n" +
-            "${remainingFive.getValue("notes")} notas de R$5\n" +
-            "${remainingOne.getValue("notes")} notas de R$1\n")
+    println(
+        "Você irá precisar de: \n" +
+                "${remainingOneHundred.getValue("notes")} notas de R$100\n" +
+                "${remainingFifty.getValue("notes")} notas de R$50\n" +
+                "${remainingTen.getValue("notes")} notas de R$10\n" +
+                "${remainingFive.getValue("notes")} notas de R$5\n" +
+                "${remainingOne.getValue("notes")} notas de R$1\n"
+    )
 }
 
-fun withdrawalConditions(): Int{
-    var canWithdraw : Boolean
-    var value  = 0
+fun withdrawalConditions(): Int {
+    var canWithdraw: Boolean
+    var value = 0
 
     do {
         println("Qual valor você gostaria de sacar?")
 
         try {
             value = getUseInput()
-        }catch (e : NumberFormatException){
+        } catch (e: NumberFormatException) {
             println("Valor inválido, por favor utilize apenas números")
             canWithdraw = false
             continue
         }
         canWithdraw = checkTheValues(value)
 
-    } while(!canWithdraw)
+    } while (!canWithdraw)
     return value
 }
 
-fun checkTheValues(value : Int) : Boolean {
+fun checkTheValues(value: Int): Boolean {
     when (value) {
         in 0..10 -> {
             println("O valor mínimo para saque é 10 reais, digite outro valor:")
@@ -67,23 +70,21 @@ fun checkTheValues(value : Int) : Boolean {
     return true
 }
 
-fun getRemainingAmount(amount: Int, noteValue: Int) : Map<String, Int>{
-    val qtdNotes = (amount/noteValue)
+fun getRemainingAmount(amount: Int, noteValue: Int): Map<String, Int> {
+    val qtdNotes = (amount / noteValue)
     val quantity = amount - (qtdNotes * noteValue)
-    return mapOf("notes" to qtdNotes,"value" to quantity)
+    return mapOf("notes" to qtdNotes, "value" to quantity)
 }
 
 fun getUseInput(): Int {
-    val input = readLine()?:""
+    val input = readLine() ?: ""
     return input.toInt()
 }
 
-enum class Notes(var weight : Int){
-    ONE (1),
-    FIVE (5),
-    TEN (10),
-    FIFTY (50),
-    ONEHUNDRED (100)
+enum class Notes(var weight: Int) {
+    ONE(1),
+    FIVE(5),
+    TEN(10),
+    FIFTY(50),
+    ONEHUNDRED(100)
 }
-
-

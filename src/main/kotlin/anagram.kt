@@ -10,13 +10,13 @@ fun main() {
     println("Digite a lista das possíveis palavras que sejam anagramas de $word")
     val candidates = readLine()?.split(",")
 
-    val anagrams = getAnagrams(word,candidates)
+    val anagrams = getAnagrams(word!!,candidates!!)
     println(anagrams)
 }
 
-fun getAnagrams(word: String?, candidates: List<String>?): List<String> {
+fun getAnagrams(word: String, candidates: List<String>): List<String> {
     val anagrams = mutableListOf<String>()
-    candidates!!.forEach {
+    candidates.forEach {
         if(isAnagrams(word,it)){
             anagrams.add(it)
         }
@@ -24,10 +24,10 @@ fun getAnagrams(word: String?, candidates: List<String>?): List<String> {
     return anagrams
 }
 
-fun isAnagrams(word: String?,candidate: String): Boolean {
+fun isAnagrams(word: String,candidate: String): Boolean {
     var tempWordTested = candidate
 
-    if (candidate.count() == word!!.count()) {
+    if (candidate.count() == word.count()) {
         word.forEach {
             if (tempWordTested.contains(it, true)) {
                 tempWordTested = tempWordTested.replaceFirst(it.toString(), "", true)
